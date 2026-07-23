@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}User Crypto Terminal{% endblock %}
+
+{% block nav_items %}
+    <span style="color: var(--text-secondary); font-size: 0.9rem;">Trader: <strong style="color: var(--text-primary);">{{ username }}</strong></span>
+    <a href="{% url 'user_login' %}" class="nav-link" style="color: var(--neon-pink);">Disconnect Wallet</a>
+{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 1.8rem; font-size: 1.8rem;">User Trading Dashboard</h2>
+
+<!-- Top Crypto Market Highlights -->
+<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <!-- Bitcoin Highlight Card -->
+    <div class="crypto-card" style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem;">
+        <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="Bitcoin" style="width: 44px; height: 44px;">
+        <div>
+            <h4 style="margin: 0; font-size: 1.1rem; color: #fff;">Bitcoin</h4>
+            <span style="color: var(--neon-green); font-size: 0.85rem; font-weight: 600;">BTC</span>
+        </div>
+    </div>
+
+    <!-- Ethereum Highlight Card -->
+    <div class="crypto-card" style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem;">
+        <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="Ethereum" style="width: 44px; height: 44px;">
+        <div>
+            <h4 style="margin: 0; font-size: 1.1rem; color: #fff;">Ethereum</h4>
+            <span style="color: var(--neon-blue); font-size: 0.85rem; font-weight: 600;">ETH</span>
+        </div>
+    </div>
+
+    <!-- User Status Card -->
+    <div class="crypto-card" style="padding: 1.25rem;">
+        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Account Identity</div>
+        <div style="color: var(--text-primary); font-weight: 600; font-size: 0.95rem;">{{ email }}</div>
+        <div style="margin-top: 0.5rem;">
+            {% if status == 'Activated' %}
+                <span class="crypto-badge badge-active">● Verified Node</span>
+            {% else %}
+                <span class="crypto-badge badge-pending">● Approval Pending</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Vault Portfolio / Owned Holdings</h3>
+<div class="table-container" style="margin-bottom: 2.5rem;">
+    <table>
+        <thead>
+            <tr>
+                <th>Asset / Token</th>
+                <th>Quantity Allocated</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for coin in owned_coins %}
+            <tr>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        {% if coin.currencyName|lower == 'bitcoin' or coin.currencyName|lower == 'btc' %}
+                            <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="BTC" style="width: 24px; height: 24px;">
+                        {% elif coin.currencyName|lower == 'ethereum' or coin.currencyName|lower == 'eth' %}
+                            <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="ETH" style="width: 24px; height: 24px;">
+                        {% else %}
+                            <span style="width: 24px; height: 24px; background: var(--border-line); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px;">🪙</span>
+                        {% endif %}
+                        <strong style="font-size: 1.05rem;">{{ coin.currencyName }}</strong>
+                    </div>
+                </td>
+                <td style="font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; color: var(--neon-green);">{{ coin.quantity }} units</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" style="text-align: center; color: var(--text-secondary); padding: 2rem;">No tokens currently held in your vault.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Active Liquidity Agents</h3>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Agent Node</th>
+                <th>Node Address</th>
+                <th>Primary Currency</th>
+                <th>Order Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for agent in agents %}
+            <tr>
+                <td><strong>{{ agent.username }}</strong></td>
+                <td style="color: var(--text-secondary); font-family: monospace;">{{ agent.email }}</td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        {% if agent.cryptcurrency|lower == 'bitcoin' or agent.cryptcurrency|lower == 'btc' %}
+                            <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="BTC" style="width: 18px; height: 18px;">
+                        {% elif agent.cryptcurrency|lower == 'ethereum' or agent.cryptcurrency|lower == 'eth' %}
+                            <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="ETH" style="width: 18px; height: 18px;">
+                        {% endif %}
+                        <span class="crypto-badge badge-active">{{ agent.cryptcurrency }}</span>
+                    </div>
+                </td>
+                <td>
+                    <a href="{% url 'buy_crypto' agent.id %}" class="btn-crypto">Buy Token</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 2rem;">No liquidity providers online.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

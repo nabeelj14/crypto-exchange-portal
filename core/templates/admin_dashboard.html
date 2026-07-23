@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f8f9fa; }
+        header { background: #343a40; padding: 15px 40px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        header a { color: #ff4d4d; text-decoration: none; font-weight: bold; }
+        .container { padding: 40px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #343a40; color: white; }
+        .btn-approve { background: #28a745; color: white; padding: 6px 12px; border: none; border-radius: 4px; text-decoration: none; font-size: 14px; }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .status-waiting { background: #ffeba2; color: #856404; }
+        .status-activated { background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>System Admin Panel</h2>
+        <a href="{% url 'home' %}">Logout</a>
+    </header>
+
+    <div class="container">
+        <!-- Pending Users -->
+        <div class="card">
+            <h3>Registered Users Approval</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>PAN</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td>{{ u.username }}</td>
+                        <td>{{ u.email }}</td>
+                        <td>{{ u.pan }}</td>
+                        <td>
+                            <span class="status-badge {% if u.status == 'waiting' %}status-waiting{% else %}status-activated{% endif %}">
+                                {{ u.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if u.status == 'waiting' %}
+                                <a href="{% url 'approve_user' u.id %}" class="btn-approve">Approve</a>
+                            {% else %}
+                                Activated
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5">No users registered yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pending Agents -->
+        <div class="card">
+            <h3>Registered Agents Approval</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Agent Name</th>
+                        <th>Email</th>
+                        <th>Assigned Currency</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in agents %}
+                    <tr>
+                        <td>{{ a.username }}</td>
+                        <td>{{ a.email }}</td>
+                        <td>{{ a.cryptcurrency }}</td>
+                        <td>
+                            <span class="status-badge {% if a.status == 'waiting' %}status-waiting{% else %}status-activated{% endif %}">
+                                {{ a.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if a.status == 'waiting' %}
+                                <a href="{% url 'approve_agent' a.id %}" class="btn-approve">Approve</a>
+                            {% else %}
+                                Activated
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5">No agents registered yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

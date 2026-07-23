@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Buy Crypto</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; background: #f8f9fa; }
+        .form-card { max-width: 450px; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 0 auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div class="form-card">
+    <h2>Buy {{ agent.cryptcurrency }}</h2>
+    <p><strong>Agent:</strong> {{ agent.username }} ({{ agent.email }})</p>
+    <p><strong>Current Price per Coin:</strong> ${{ rate.doller }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Quantity to Purchase</label>
+            <input type="number" name="quantity" min="1" value="1" required>
+        </div>
+        <button type="submit">Confirm Purchase</button>
+    </form>
+    <p style="margin-top: 15px;"><a href="{% url 'user_dashboard' %}">Back to Dashboard</a></p>
+</div>
+
+</body>
+</html>

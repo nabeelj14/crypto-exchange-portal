@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CryptoVault | Decentralized Exchange{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0b0e14;
+            --bg-card: rgba(22, 28, 38, 0.7);
+            --bg-card-solid: #161c26;
+            --border-glow: rgba(0, 242, 254, 0.2);
+            --border-line: #232b38;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --neon-blue: #00f2fe;
+            --neon-green: #00ff87;
+            --neon-purple: #7f00ff;
+            --neon-pink: #ff007f;
+            --gradient-accent: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --gradient-card: linear-gradient(180deg, rgba(22, 28, 38, 0.8) 0%, rgba(15, 20, 28, 0.9) 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, h4, .brand-text {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(127, 0, 255, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* --- Glassmorphic Navbar --- */
+        .navbar {
+            background: rgba(11, 14, 20, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-line);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--neon-blue);
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.5);
+        }
+
+        /* --- Container & Layout --- */
+        .container {
+            max-width: 1200px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* --- Crypto Cards --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .crypto-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-line);
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .crypto-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--border-glow);
+        }
+
+        .crypto-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-accent);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* --- Modern Tables --- */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border-line);
+            background: var(--bg-card-solid);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(11, 14, 20, 0.9);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid var(--border-line);
+        }
+
+        td {
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid var(--border-line);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(0, 242, 254, 0.02);
+        }
+
+        /* --- Badges & Crypto Accents --- */
+        .crypto-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .badge-active {
+            background: rgba(0, 255, 135, 0.1);
+            color: var(--neon-green);
+            border: 1px solid rgba(0, 255, 135, 0.3);
+        }
+
+        .badge-pending {
+            background: rgba(255, 0, 127, 0.1);
+            color: var(--neon-pink);
+            border: 1px solid rgba(255, 0, 127, 0.3);
+        }
+
+        .price-green {
+            color: var(--neon-green);
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* --- Neon Buttons --- */
+        .btn-crypto {
+            background: var(--gradient-accent);
+            color: #0b0e14;
+            padding: 0.65rem 1.3rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+            display: inline-block;
+        }
+
+        .btn-crypto:hover {
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.6);
+            transform: translateY(-1px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-line);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: auto;
+            background: rgba(11, 14, 20, 0.5);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="navbar-brand">
+            <div class="brand-icon">₿</div>
+            <span class="brand-text">CryptoVault</span>
+        </a>
+        <div class="navbar-nav">
+            {% block nav_items %}
+                <a href="{% url 'user_login' %}" class="nav-link">User Terminal</a>
+                <a href="{% url 'agent_login' %}" class="nav-link">Agent Portal</a>
+            {% endblock %}
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        &copy; 2026 CryptoVault Exchange Protocol. All network nodes active.
+    </footer>
+
+</body>
+</html>

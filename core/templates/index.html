@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Live Crypto Rates | CryptoVault{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem;">
+    <div>
+        <h2 style="font-size: 1.8rem; margin-bottom: 0.3rem;">Market Exchange Rates</h2>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;">Real-time valuation feed across decentralized liquidity pools.</p>
+    </div>
+</div>
+
+<!-- Crypto Highlight Cards -->
+<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+    <div class="crypto-card" style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem;">
+        <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="Bitcoin" style="width: 44px; height: 44px;">
+        <div>
+            <h4 style="margin: 0; font-size: 1.1rem; color: #fff;">Bitcoin</h4>
+            <span style="color: var(--neon-green); font-size: 0.85rem; font-weight: 600;">BTC / USD</span>
+        </div>
+    </div>
+
+    <div class="crypto-card" style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem;">
+        <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="Ethereum" style="width: 44px; height: 44px;">
+        <div>
+            <h4 style="margin: 0; font-size: 1.1rem; color: #fff;">Ethereum</h4>
+            <span style="color: var(--neon-blue); font-size: 0.85rem; font-weight: 600;">ETH / USD</span>
+        </div>
+    </div>
+</div>
+
+<h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Supported Network Assets</h3>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Currency Type</th>
+                <th>Current Price (USD)</th>
+                <th>Last Synced Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rate in rates %}
+            <tr>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        {% if rate.currencytype|lower == 'bitcoin' or rate.currencytype|lower == 'btc' %}
+                            <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="BTC" style="width: 24px; height: 24px;">
+                        {% elif rate.currencytype|lower == 'ethereum' or rate.currencytype|lower == 'eth' %}
+                            <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="ETH" style="width: 24px; height: 24px;">
+                        {% else %}
+                            <span style="width: 24px; height: 24px; background: var(--border-line); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px;">🪙</span>
+                        {% endif %}
+                        <strong style="font-size: 1.05rem;">{{ rate.currencytype }}</strong>
+                    </div>
+                </td>
+                <td class="price-green" style="font-size: 1.1rem;">${{ rate.doller }}</td>
+                <td style="color: var(--text-secondary); font-size: 0.85rem;">{{ rate.cdate }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" style="text-align: center; color: var(--text-secondary); padding: 2rem;">No currency rates currently loaded in the database.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Agent Control Center | CryptoVault{% endblock %}
+
+{% block nav_items %}
+    <span style="color: var(--text-secondary); font-size: 0.9rem;">Agent Node: <strong style="color: var(--text-primary);">{{ username }}</strong></span>
+    <a href="{% url 'agent_login' %}" class="nav-link" style="color: var(--neon-pink);">Exit Portal</a>
+{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 1.8rem; font-size: 1.8rem;">Agent Liquidity Terminal</h2>
+
+<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+    <div class="crypto-card">
+        <div class="card-title">
+            <span>Agent Specifications</span>
+            {% if cryptcurrency|lower == 'bitcoin' or cryptcurrency|lower == 'btc' %}
+                <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="BTC" style="width: 24px; height: 24px;">
+            {% elif cryptcurrency|lower == 'ethereum' or cryptcurrency|lower == 'eth' %}
+                <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="ETH" style="width: 24px; height: 24px;">
+            {% endif %}
+        </div>
+        <p style="margin-bottom: 0.8rem; color: var(--text-secondary);"><strong>Node Email:</strong><br><span style="color: var(--text-primary); font-family: monospace;">{{ email }}</span></p>
+        <p style="margin-bottom: 0.8rem; color: var(--text-secondary);"><strong>Assigned Asset:</strong><br><span class="crypto-badge badge-active">{{ cryptcurrency }}</span></p>
+        <p style="color: var(--text-secondary);"><strong>Network Status:</strong><br><span class="crypto-badge badge-active">{{ status }}</span></p>
+    </div>
+</div>
+
+<h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Incoming Customer Order Ledgers</h3>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Customer Identity</th>
+                <th>Node Address</th>
+                <th>Token</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Value</th>
+                <th>Block Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td><strong>{{ order.customername }}</strong></td>
+                <td style="color: var(--text-secondary); font-family: monospace;">{{ order.email }}</td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        {% if order.currencyname|lower == 'bitcoin' or order.currencyname|lower == 'btc' %}
+                            <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" alt="BTC" style="width: 18px; height: 18px;">
+                        {% elif order.currencyname|lower == 'ethereum' or order.currencyname|lower == 'eth' %}
+                            <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" alt="ETH" style="width: 18px; height: 18px;">
+                        {% endif %}
+                        <span>{{ order.currencyname }}</span>
+                    </div>
+                </td>
+                <td>{{ order.quantity }}</td>
+                <td>${{ order.singlecoingamount }}</td>
+                <td class="price-green">${{ order.payableammount }}</td>
+                <td style="color: var(--text-secondary); font-size: 0.85rem;">{{ order.cdate }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 2rem;">No network orders recorded for your node yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
